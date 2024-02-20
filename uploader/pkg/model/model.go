@@ -1,6 +1,8 @@
 package model
 
-import "github.com/gofrs/uuid"
+import (
+	"github.com/gofrs/uuid"
+)
 
 type GitAuth struct {
 	Username string `json:"username,omitempty"`

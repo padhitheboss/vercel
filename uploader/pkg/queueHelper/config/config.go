@@ -10,6 +10,8 @@ type QueueFunction interface {
 	Connect()
 	ReadFromQueue() (string, error)
 	WriteToQueue(string) error
+	UpdateDB(string, string) error
+	GetFromDB(string) (string, error)
 }
 
 // Initialize Queue

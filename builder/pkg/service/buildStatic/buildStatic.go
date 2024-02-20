@@ -17,7 +17,7 @@ type BuildReact struct {
 }
 
 type Build interface {
-	BuildStatic()
+	BuildStatic() (string, error)
 	GetOutputPath() string
 }
 
@@ -32,15 +32,17 @@ func CreateConfig(framework, repoPath string) Build {
 	}
 	return nil
 }
-func (b *BuildReact) BuildStatic() {
+func (b *BuildReact) BuildStatic() (string, error) {
+	var buildLog string = ""
 	cmd := exec.Command("npm", "install")
 	cmd.Dir = b.repoPath
 	output, err := cmd.Output()
 	if err != nil {
 		b.status = "failed"
 		log.Println(err)
-		return
+		return string(output), err
 	}
+	buildLog += string(output)
 	preBuildFolder := CaptureFolderList(b.repoPath)
 	preBuildFolder["node_modules"] = true
 	fmt.Println(string(output))
@@ -50,17 +52,19 @@ func (b *BuildReact) BuildStatic() {
 	if err != nil {
 		b.status = "failed"
 		log.Println(err)
-		return
+		return string(output), err
 	}
+	buildLog += string(output)
 	b.status = "success"
 	fmt.Println(string(output))
 	postBuildFolder := CaptureFolderList(b.repoPath)
 	for key := range postBuildFolder {
 		if _, ok := preBuildFolder[key]; !ok {
 			b.outputPath = b.repoPath + "/" + key
-			return
+			return buildLog, nil
 		}
 	}
+	return buildLog, nil
 }
 
 func (b *BuildReact) GetOutputPath() string {

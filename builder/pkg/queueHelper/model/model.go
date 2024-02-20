@@ -2,7 +2,9 @@ package queuemodel
 
 import (
 	"encoding/json"
+	"fmt"
 
+	"github.com/padhitheboss/code-builder/pkg/logger"
 	queueconfig "github.com/padhitheboss/code-builder/pkg/queueHelper/config"
 )
 
@@ -63,4 +65,29 @@ func CollectRequest() (Response, error) {
 	var req Response
 	json.Unmarshal([]byte(message), &req)
 	return req, err
+}
+
+func UpdateDB(l logger.LogDB) error {
+	if l.LayerLogs[len(l.LayerLogs)-1].Status == "failed" {
+		l.Status = "failed"
+	} else {
+		l.Status = "success"
+	}
+	value, err := json.Marshal(l)
+	if err != nil {
+		fmt.Println("error converting json to string:", err)
+		return err
+	}
+	return q.UpdateDB(l.EndpointName, string(value))
+}
+
+func GetFromDB(id string) (logger.LogDB, error) {
+	var l logger.LogDB
+	value, err := q.GetFromDB(id)
+	if err != nil {
+		fmt.Println("error converting string to json:", err)
+		return l, err
+	}
+	json.Unmarshal([]byte(value), &l)
+	return l, nil
 }

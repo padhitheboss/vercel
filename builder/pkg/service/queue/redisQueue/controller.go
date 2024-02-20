@@ -54,3 +54,22 @@ func (r *RedisConfig) WriteToQueue(message string) error {
 	res := r.client.Publish(context.Background(), r.writeChannel, message)
 	return res.Err()
 }
+
+func (r *RedisConfig) UpdateDB(key, value string) error {
+	err := r.client.Set(context.Background(), key, value, 0).Err()
+	if err != nil {
+		fmt.Println("Error setting value in Redis:", err)
+		return err
+	}
+	return nil
+}
+
+func (r *RedisConfig) GetFromDB(reqId string) (string, error) {
+	val, err := r.client.Get(context.Background(), reqId).Result()
+	if err != nil {
+		fmt.Println("Error setting value in Redis:", err)
+		return "", err
+	}
+
+	return val, nil
+}

@@ -31,6 +31,7 @@ func (k *Kubejob) Initialize() {
 func (k *Kubejob) CreateJobTemplate(req queuemodel.Request) {
 	envVars := []corev1.EnvVar{
 		{Name: "REQUEST_ID", Value: req.RequestId},
+		{Name: "ENDPOINT_NAME", Value: req.EndpointName},
 		{Name: "BLOB_ACCOUNT_NAME", Value: os.Getenv("BLOB_ACCOUNT_NAME")},
 		{Name: "BLOB_ACCOUNT_KEY", Value: os.Getenv("BLOB_ACCOUNT_KEY")},
 		{Name: "SOURCE_BLOB_CONTAINER_NAME", Value: os.Getenv("SOURCE_BLOB_CONTAINER_NAME")},
@@ -40,6 +41,12 @@ func (k *Kubejob) CreateJobTemplate(req queuemodel.Request) {
 		{Name: "BLOB_INPUT_FOLDER_PATH", Value: req.BlobUrl},
 		{Name: "BUILD_FOLDER_PATH", Value: os.Getenv("BUILD_FOLDER_PATH")},
 		{Name: "PROJECT_TYPE", Value: req.ProjectType},
+		{Name: "Q_ADDRESS", Value: os.Getenv("Q_ADDRESS")},
+		{Name: "Q_PORT", Value: os.Getenv("Q_PORT")},
+		{Name: "Q_PASSWORD", Value: os.Getenv("Q_PASSWORD")},
+		{Name: "Q_R_CHANNEL", Value: os.Getenv("Q_R_CHANNEL")},
+		{Name: "Q_W_CHANNEL", Value: os.Getenv("Q_W_CHANNEL")},
+		{Name: "Q_DB", Value: os.Getenv("Q_DB")},
 	}
 
 	// Define the container spec for the Kubernetes Job

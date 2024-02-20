@@ -21,16 +21,17 @@ type GitAuth struct {
 type Response struct {
 	RequestId    string `json:"request_id"`
 	RepoUrl      string `json:"repo_url"`
-	EndPointName string `json:"endpoint_name"`
+	EndpointName string `json:"endpoint_name"`
 	GitAuth
 }
 
 type Request struct {
-	RequestId   string `json:"request_id"`
-	Status      string `json:"status"`
-	BlobUrl     string `json:"blob_url"`
-	ResourceId  string `json:"resource_id"`
-	ProjectType string `json:"project_type"`
+	RequestId    string `json:"request_id"`
+	Status       string `json:"status"`
+	BlobUrl      string `json:"blob_url"`
+	ResourceId   string `json:"resource_id"`
+	ProjectType  string `json:"project_type"`
+	EndpointName string `json:"endpoint_name"`
 }
 
 func (auth *GitAuth) GetGitUserPass() (string, string) {
